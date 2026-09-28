@@ -161,6 +161,7 @@ $('startBtn').addEventListener('click', () => {
   run.current = first.key;
   save();
   render(true);
+  window.scrollTo({ top: 0 });
   $('pctInput').focus();
 });
 
@@ -306,9 +307,12 @@ function renderLog() {
     const level = BY_KEY.get(r.key);
     if (!level) continue;
     const li = document.createElement('li');
-    li.innerHTML = '<div class="thumb mini"><canvas width="160" height="90"></canvas></div><div class="who"><b></b><span></span></div><div class="res"></div>';
-    li.querySelector('.who b').textContent = level.name;
-    li.querySelector('.who span').textContent = `#${fmt(level.pos)} · by ${level.creator}`;
+    li.className = 'panel';
+    li.innerHTML = '<div class="thumb mini"><canvas width="320" height="180"></canvas></div><div class="who"><b><span class="pos"></span> – <span></span></b><span></span></div><div class="res"></div>';
+    const [pos, name] = li.querySelectorAll('.who b span');
+    pos.textContent = '#' + fmt(level.pos);
+    name.textContent = level.name;
+    li.querySelector('.who > span').textContent = `by ${level.creator}`;
     const res = li.querySelector('.res');
     if (r.quit) {
       res.classList.add('quit');
@@ -338,7 +342,12 @@ $('againBtn').addEventListener('click', () => {
 function render(animate) {
   const playing = run && run.status === 'playing' && BY_KEY.has(run.current);
   const ended = run && run.status !== 'playing';
-  $('setup').hidden = !!run && (playing || ended);
+  const started = !!run && (playing || ended);
+  $('setup').hidden = started;
+  $('topbar').hidden = !started;
+  $('runPage').hidden = !started;
+  $('hudStats').hidden = !playing;
+  $('quitBtn').hidden = !playing;
   $('play').hidden = !playing;
   $('end').hidden = !ended;
   if (!run || (!playing && !ended)) { run = null; $('log').hidden = true; renderSetup(); return; }
