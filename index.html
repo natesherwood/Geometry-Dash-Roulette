@@ -1,0 +1,117 @@
+<title>Extreme Demon Roulette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titan+One&family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+
+<div class="wrap">
+  <header>
+    <h1 class="outlined">Extreme Demon Roulette</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <!-- Setup -->
+  <section id="setup" class="wrap" style="gap:16px">
+    <details class="panel range" id="rangeBox" open>
+      <summary>
+        <span class="sum-label">Level range</span>
+        <span class="sum-value"><span id="sumText"></span><span class="chev" aria-hidden="true">▾</span></span>
+      </summary>
+      <div class="range-body">
+        <div class="dual">
+          <div class="track"></div>
+          <div class="fill" id="fill"></div>
+          <input type="range" id="lo" min="1" step="1" aria-label="Hardest level in range (lowest rank number)">
+          <input type="range" id="hi" min="1" step="1" aria-label="Easiest level in range (highest rank number)">
+        </div>
+        <div class="bounds">
+          <div class="field"><label for="loNum">From #</label><input class="num" type="number" id="loNum" min="1" inputmode="numeric"></div>
+          <span class="dash">to</span>
+          <div class="field"><label for="hiNum">To #</label><input class="num" type="number" id="hiNum" min="1" inputmode="numeric"></div>
+          <div class="count"><b id="poolCount">0</b> levels in range</div>
+        </div>
+        <div class="presets" id="presets" aria-label="Range presets"></div>
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" id="twoP"><span>Include 2-player levels<small>Levels marked (2P) need both sides played at once.</small></span></label>
+          <label class="toggle"><input type="checkbox" id="legacy"><span>Include legacy levels<small>Former extremes kept below the main list, ranked after it.</small></span></label>
+        </div>
+        <p class="warn" id="fewWarn" hidden></p>
+      </div>
+    </details>
+
+    <div class="panel rules">
+      <h2>How it works</h2>
+      <ol>
+        <li>You get a random level from your range. Get at least <b>1%</b> on it.</li>
+        <li>Enter the best percent you got. The next level needs <b>1% more</b> than that, so 5% on this one means 6% on the next.</li>
+        <li>Keep going until you reach 100%, or give up.</li>
+      </ol>
+    </div>
+
+    <button class="btn btn-gold start" id="startBtn" type="button">Start roulette</button>
+  </section>
+
+  <!-- Play -->
+  <section id="play" class="wrap" style="gap:16px" hidden>
+    <div class="hud">
+      <div class="hud-stats">
+        <span>Level <b id="hudLevel">1</b></span>
+        <span>Range <b id="hudRange"></b></span>
+        <span><b id="hudLeft"></b> left</span>
+      </div>
+      <button class="btn btn-ghost" id="quitBtn" type="button">Give up</button>
+    </div>
+
+    <article class="panel card" id="card">
+      <div class="thumb" id="thumb">
+        <canvas id="thumbCanvas" width="320" height="180" role="img" aria-label="Level thumbnail"></canvas>
+        <span class="rank" id="rank"></span>
+        <span class="tag" id="tag" hidden></span>
+      </div>
+      <div class="card-body">
+        <div class="title-row">
+          <h2 class="level-name outlined" id="levelName"></h2>
+          <div class="creator">by <b id="creator"></b></div>
+        </div>
+        <div class="facts">
+          <span class="id-pill"><span>ID</span><span id="levelId"></span><button class="icon-btn" id="copyBtn" type="button">Copy</button></span>
+          <div class="links">
+            <a id="ytLink" href="#" target="_blank" rel="noopener">Verification video ↗</a>
+            <a id="aredlLink" href="#" target="_blank" rel="noopener">AREDL page ↗</a>
+          </div>
+        </div>
+
+        <form class="goal" id="entryForm" novalidate>
+          <div class="goal-head">
+            <span class="label">Goal on this level</span>
+            <span class="goal-pct outlined" id="goalPct" aria-live="polite">1%</span>
+          </div>
+          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="bar"><div class="bar-fill" id="barFill"></div></div>
+          <div class="entry">
+            <div class="pct-in"><input type="number" id="pctInput" min="1" max="100" step="1" inputmode="numeric" placeholder="Your best" aria-label="Best percent you got on this level"></div>
+            <button class="btn btn-go" type="submit" id="doneBtn">Done</button>
+          </div>
+          <p class="error" id="entryError" role="alert"></p>
+        </form>
+      </div>
+    </article>
+  </section>
+
+  <!-- End -->
+  <section id="end" class="panel result" hidden>
+    <h2 class="outlined" id="endTitle"></h2>
+    <p id="endText"></p>
+    <div class="stats" id="endStats"></div>
+    <button class="btn btn-gold" id="againBtn" type="button">New roulette</button>
+  </section>
+
+  <section id="log" class="panel log" hidden>
+    <h2>Run log</h2>
+    <ol id="logList"></ol>
+  </section>
+
+  <footer>Level data from the <a href="https://aredl.net" target="_blank" rel="noopener">All Rated Extreme Demons List</a>. Thumbnails are the verification videos on YouTube.</footer>
+</div>
+
+<script src="levels.js"></script>
+<script src="app.js"></script>
